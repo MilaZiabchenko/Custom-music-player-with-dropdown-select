@@ -10,30 +10,30 @@ const progressContainer = document.querySelector('.progress-container');
 
 // Song titles
 const songs = [
-	'Avishai Cohen - Remembering',
-	'Corpo-Mente - Fia',
-	'Kovacs - My Love',
-	'Muse - Drones',
-	'Muse - Map Of Your Head',
-	'Pomme - On Brûlera',
-	'Rammstein - Diamant',
-	'Thom Yorke - Suspirium',
-	'Yann Tiersen - Les Jours Tristes',
-	'ZAZ - Éblouie Par La Nuit',
+  'Avishai Cohen - Remembering',
+  'Corpo-Mente - Fia',
+  'Kovacs - My Love',
+  'Muse - Drones',
+  'Muse - Map Of Your Head',
+  'Pomme - On Brûlera',
+  'Rammstein - Diamant',
+  'Thom Yorke - Suspirium',
+  'Yann Tiersen - Les Jours Tristes',
+  'ZAZ - Éblouie Par La Nuit',
 ];
 
 // Image titles
 const images = [
-	'mariposa',
-	'neon rose',
-	'girl',
-	'galaxy night',
-	'galaxy cat',
-	'rain on the leaves',
-	'diamond',
-	'butterflies',
-	'green house',
-	'street lamp',
+  'mariposa',
+  'neon rose',
+  'girl',
+  'galaxy night',
+  'galaxy cat',
+  'rain on the leaves',
+  'diamond',
+  'butterflies',
+  'green house',
+  'street lamp',
 ];
 
 // Keep track of songs and images
@@ -45,78 +45,78 @@ loadSong(songs[songIndex], images[imageIndex]);
 
 // Update song details
 function loadSong(song, img) {
-	title.textContent = song;
-	audio.src = `music/${song}.mp3`;
-	cover.src = `images/${img}.jpg`;
+  title.textContent = song;
+  audio.src = `music/${song}.mp3`;
+  cover.src = `images/${img}.jpg`;
 }
 
 function playSong() {
-	musicContainer.classList.add('play');
-	playBtn.querySelector('i.fas').classList.remove('fa-play');
-	playBtn.querySelector('i.fas').classList.add('fa-pause');
+  musicContainer.classList.add('play');
+  playBtn.querySelector('i.fas').classList.remove('fa-play');
+  playBtn.querySelector('i.fas').classList.add('fa-pause');
 
-	audio.play();
+  audio.play();
 }
 
 function pauseSong() {
-	musicContainer.classList.remove('play');
-	playBtn.querySelector('i.fas').classList.add('fa-play');
-	playBtn.querySelector('i.fas').classList.remove('fa-pause');
+  musicContainer.classList.remove('play');
+  playBtn.querySelector('i.fas').classList.add('fa-play');
+  playBtn.querySelector('i.fas').classList.remove('fa-pause');
 
-	audio.pause();
+  audio.pause();
 }
 
 function prevSong() {
-	songIndex--;
-	imageIndex--;
+  songIndex--;
+  imageIndex--;
 
-	if (songIndex < 0 && imageIndex < 0) {
-		songIndex = songs.length - 1;
-		imageIndex = images.length - 1;
-	}
+  if (songIndex < 0 && imageIndex < 0) {
+    songIndex = songs.length - 1;
+    imageIndex = images.length - 1;
+  }
 
-	loadSong(songs[songIndex], images[imageIndex]);
+  loadSong(songs[songIndex], images[imageIndex]);
 
-	playSong();
+  playSong();
 }
 
 function nextSong() {
-	songIndex++;
-	imageIndex++;
+  songIndex++;
+  imageIndex++;
 
-	if (songIndex > songs.length - 1 && imageIndex > images.length - 1) {
-		songIndex = 0;
-		imageIndex = 0;
-	}
+  if (songIndex > songs.length - 1 && imageIndex > images.length - 1) {
+    songIndex = 0;
+    imageIndex = 0;
+  }
 
-	loadSong(songs[songIndex], images[imageIndex]);
+  loadSong(songs[songIndex], images[imageIndex]);
 
-	playSong();
+  playSong();
 }
 
 function updateProgress(e) {
-	const { duration, currentTime } = e.srcElement;
-	const progressPercent = (currentTime / duration) * 100;
-	progress.style.width = `${progressPercent}%`;
+  const { duration, currentTime } = e.srcElement;
+  const progressPercent = (currentTime / duration) * 100;
+  progress.style.width = `${progressPercent}%`;
 }
 
 function setProgress(e) {
-	const width = this.clientWidth;
-	const clickX = e.offsetX;
-	const duration = audio.duration;
+  const width = this.clientWidth;
+  const clickX = e.offsetX;
+  const duration = audio.duration;
 
-	audio.currentTime = (clickX / width) * duration;
+  audio.currentTime = (clickX / width) * duration;
 }
 
 // Event listeners
 playBtn.addEventListener('click', () => {
-	const isPlaying = musicContainer.classList.contains('play');
+  const isPlaying = musicContainer.classList.contains('play');
 
-	if (isPlaying) {
-		pauseSong();
-	} else {
-		playSong();
-	}
+  if (isPlaying) {
+    pauseSong();
+  } else {
+    playSong();
+  }
 });
 
 // Change song events
