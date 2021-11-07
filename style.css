@@ -73,16 +73,6 @@ h1 {
   animation-play-state: running;
 }
 
-@keyframes rotate {
-  from {
-    transform: rotate(360deg);
-  }
-
-  to {
-    transform: rotate(0deg);
-  }
-}
-
 .navigation {
   display: flex;
   align-items: center;
@@ -146,6 +136,16 @@ h1 {
   border-radius: 5px;
   background-color: hsl(345, 98%, 77%);
   transition: width 100ms linear;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(360deg);
+  }
+
+  to {
+    transform: rotate(0deg);
+  }
 }
 
 @media (max-width: 420px) {

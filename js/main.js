@@ -1,3 +1,5 @@
+import {songs, images} from './constants.js';
+
 const musicContainer = document.querySelector('.music-container');
 const playBtn = document.querySelector('#play');
 const prevBtn = document.querySelector('#prev');
@@ -7,34 +9,6 @@ const audio = document.querySelector('#audio');
 const cover = document.querySelector('#cover');
 const progress = document.querySelector('.progress');
 const progressContainer = document.querySelector('.progress-container');
-
-// Song titles
-const songs = [
-  'Avishai Cohen - Remembering',
-  'Corpo-Mente - Fia',
-  'Kovacs - My Love',
-  'Muse - Drones',
-  'Muse - Map Of Your Head',
-  'Pomme - On Brûlera',
-  'Rammstein - Diamant',
-  'Thom Yorke - Suspirium',
-  'Yann Tiersen - Les Jours Tristes',
-  'ZAZ - Éblouie Par La Nuit',
-];
-
-// Image titles
-const images = [
-  'mariposa',
-  'neon rose',
-  'girl',
-  'galaxy night',
-  'galaxy cat',
-  'rain on the leaves',
-  'diamond',
-  'butterflies',
-  'green house',
-  'street lamp',
-];
 
 // Keep track of songs and images
 let songIndex = 0;
