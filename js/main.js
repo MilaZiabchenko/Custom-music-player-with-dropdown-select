@@ -19,12 +19,6 @@ let songIndex = 0;
 let imageIndex = 0;
 let selectIndex = 0;
 
-// Initially load song and image into the DOM
-loadSong(songs[songIndex], images[imageIndex]);
-
-// Load song options into the dropdown
-loadSongOptions();
-
 // Update song details
 function loadSong(song, img) {
   title.textContent = song;
@@ -37,6 +31,12 @@ function loadSongOptions() {
     option.textContent = songs[selectIndex++];
   });
 }
+
+// Initially load song and image into the DOM
+loadSong(songs[songIndex], images[imageIndex]);
+
+// Load song options into the dropdown
+loadSongOptions();
 
 function playSong() {
   musicContainer.classList.add('play');
@@ -121,14 +121,6 @@ prevBtn.addEventListener('click', prevSong);
 nextBtn.addEventListener('click', nextSong);
 audio.addEventListener('ended', nextSong);
 
-// This event listener doesn't hear the 'click' event on select options, and I don't know why... (((
-selectOptions.forEach(option =>
-  option.addEventListener('click', e => {
-    selectedSong;
-    console.log(e.target, 'Clicked');
-  })
-);
-
 // Song progress events
 audio.addEventListener('timeupdate', updateProgress);
 progressContainer.addEventListener('click', setProgress);
@@ -137,3 +129,12 @@ progressContainer.addEventListener('click', setProgress);
 selectElements.forEach(selectElement => {
   new Select(selectElement);
 });
+
+// This event listener doesn't hear the event on select options, and I don't know why... (((
+selectOptions.forEach(option =>
+  option.addEventListener('change', e => {
+    // option.addEventListener('click', e => {
+    selectedSong;
+    // console.log(e.target, 'Event happened');
+  })
+);
