@@ -1,14 +1,16 @@
+import { songs } from './constants.js';
+
 export default class Select {
   constructor(element) {
     this.element = element;
     this.options = getFormattedOptions(element.querySelectorAll('option'));
-    this.customElement = document.createElement('div');
-    this.labelElement = document.createElement('span');
-    this.optionsCustomElement = document.createElement('ul');
+    this.customDropdownContainer = document.createElement('div');
+    this.customDropdownValue = document.createElement('span');
+    this.customDropdownOptions = document.createElement('ul');
 
     setupCustomElement(this);
     element.style.display = 'none';
-    element.after(this.customElement);
+    element.after(this.customDropdownContainer);
   }
 
   get selectedOption() {
@@ -20,22 +22,24 @@ export default class Select {
   }
 
   selectValue(value) {
-    const newSelectedOption = this.options.find(option => {
-      return option.value === value;
-    });
     const prevSelectedOption = this.selectedOption;
+
     prevSelectedOption.selected = false;
     prevSelectedOption.element.selected = false;
+
+    const newSelectedOption = this.options.find(
+      option => option.value === value
+    );
 
     newSelectedOption.selected = true;
     newSelectedOption.element.selected = true;
 
-    this.labelElement.innerText = newSelectedOption.label;
-
-    this.optionsCustomElement
+    this.customDropdownValue.textContent = newSelectedOption.label;
+    this.customDropdownOptions
       .querySelector(`[data-value='${prevSelectedOption.value}']`)
       .classList.remove('selected');
-    const newCustomElement = this.optionsCustomElement.querySelector(
+
+    const newCustomElement = this.customDropdownOptions.querySelector(
       `[data-value='${newSelectedOption.value}']`
     );
     newCustomElement.classList.add('selected');
@@ -44,73 +48,70 @@ export default class Select {
 }
 
 function getFormattedOptions(optionElements) {
-  return [...optionElements].map(optionElement => {
-    return {
-      value: optionElement.value,
-      label: optionElement.label,
-      selected: optionElement.selected,
-      element: optionElement,
-    };
-  });
+  return [...optionElements].map(optionElement => ({
+    value: optionElement.value,
+    label: optionElement.label,
+    selected: optionElement.selected,
+    element: optionElement,
+  }));
 }
 
 function setupCustomElement(select) {
-  select.customElement.classList.add('custom-select-container');
-  select.customElement.tabIndex = 0;
+  select.customDropdownContainer.classList.add('custom-select-container');
+  select.customDropdownContainer.tabIndex = 0;
 
-  select.labelElement.classList.add('custom-select-value');
-  select.labelElement.innerText = select.selectedOption.label;
-  select.customElement.append(select.labelElement);
+  select.customDropdownValue.classList.add('custom-select-value');
+  select.customDropdownValue.textContent = select.selectedOption.textContent;
+  select.customDropdownContainer.append(select.customDropdownValue);
 
-  select.optionsCustomElement.classList.add('custom-select-options');
+  select.customDropdownOptions.classList.add('custom-select-options');
+
+  let selectIndex = 0;
+
   select.options.forEach(option => {
     const optionElement = document.createElement('li');
     optionElement.classList.add('custom-select-option');
     optionElement.classList.toggle('selected', option.selected);
-    optionElement.innerText = option.label;
+    optionElement.textContent = songs[selectIndex++];
     optionElement.dataset.value = option.value;
     optionElement.addEventListener('click', () => {
       select.selectValue(option.value);
-      select.optionsCustomElement.classList.remove('show');
+      select.customDropdownOptions.classList.remove('show');
     });
-    select.optionsCustomElement.append(optionElement);
+    select.customDropdownOptions.append(optionElement);
   });
-  select.customElement.append(select.optionsCustomElement);
+  select.customDropdownContainer.append(select.customDropdownOptions);
 
-  select.labelElement.addEventListener('click', () => {
-    select.optionsCustomElement.classList.toggle('show');
+  select.customDropdownValue.addEventListener('click', () => {
+    select.customDropdownOptions.classList.toggle('show');
   });
 
-  select.customElement.addEventListener('blur', () => {
-    select.optionsCustomElement.classList.remove('show');
+  select.customDropdownContainer.addEventListener('blur', () => {
+    select.customDropdownOptions.classList.remove('show');
   });
 
   let searchTerm = '';
   let debounceTimeout;
 
-  select.customElement.addEventListener('keydown', e => {
+  select.customDropdownContainer.addEventListener('keydown', e => {
     switch (e.code) {
       case 'Space':
-        select.optionsCustomElement.classList.toggle('show');
+        select.customDropdownOptions.classList.toggle('show');
         break;
 
       case 'ArrowUp':
         const prevOption = select.options[select.selectedOptionIndex - 1];
-        if (prevOption) {
-          select.selectValue(prevOption.value);
-        }
+        prevOption && select.selectValue(prevOption.value);
         break;
 
       case 'ArrowDown':
         const nextOption = select.options[select.selectedOptionIndex + 1];
-        if (nextOption) {
-          select.selectValue(nextOption.value);
-        }
+        nextOption && select.selectValue(nextOption.value);
         break;
 
       case 'Enter':
       case 'Escape':
-        select.optionsCustomElement.classList.remove('show');
+        select.customDropdownOptions.classList.remove('show');
         break;
 
       default:
@@ -123,7 +124,7 @@ function setupCustomElement(select) {
         const searchedOption = select.options.find(option => {
           return option.label.toLowerCase().startsWith(searchTerm);
         });
-        if (searchedOption) select.selectValue(searchedOption.value);
+        searchedOption && select.selectValue(searchedOption.value);
     }
   });
 }

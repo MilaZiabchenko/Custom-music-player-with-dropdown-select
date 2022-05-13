@@ -10,14 +10,19 @@ const audio = document.querySelector('#audio');
 const cover = document.querySelector('#cover');
 const progress = document.querySelector('.progress');
 const progressContainer = document.querySelector('.progress-container');
-const selectElements = document.querySelectorAll('[data-custom]');
-const selectOptions = document.querySelectorAll('.custom-select-option');
-const options = document.querySelectorAll('#option');
+
+// Create custom select options
+const selectElements = document.querySelectorAll('[data-select]');
+selectElements.forEach(selectElement => {
+  new Select(selectElement);
+});
+const options = document.querySelectorAll('.custom-select-option');
+const selectedValue = document.querySelector('.custom-select-value');
 
 // Keep track of songs and images
 let songIndex = 0;
 let imageIndex = 0;
-let selectIndex = 0;
+// let selectIndex = 0;
 
 // Update song details
 function loadSong(song, img) {
@@ -26,17 +31,19 @@ function loadSong(song, img) {
   cover.src = `images/${img}.jpg`;
 }
 
-function loadSongOptions() {
-  options.forEach(option => {
-    option.textContent = songs[selectIndex++];
-  });
-}
-
 // Initially load song and image into the DOM
 loadSong(songs[songIndex], images[imageIndex]);
 
-// Load song options into the dropdown
-loadSongOptions();
+let selectedOption = [...options].find(option =>
+  option.classList.contains('selected')
+);
+
+function loadSelectedValue() {
+  selectedValue.textContent = selectedOption.textContent;
+}
+
+// Initially load selected value into the dropdown
+loadSelectedValue();
 
 function playSong() {
   musicContainer.classList.add('play');
@@ -54,7 +61,7 @@ function pauseSong() {
   audio.pause();
 }
 
-function prevSong() {
+function playPrevSong() {
   songIndex--;
   imageIndex--;
 
@@ -68,7 +75,7 @@ function prevSong() {
   playSong();
 }
 
-function nextSong() {
+function playNextSong() {
   songIndex++;
   imageIndex++;
 
@@ -82,14 +89,34 @@ function nextSong() {
   playSong();
 }
 
-function selectedSong() {
-  songIndex = selectIndex;
-  imageIndex = selectIndex;
+function playSelectedSong(index) {
+  songIndex = index;
+  imageIndex = index;
 
-  loadSong(songs[songIndex], images[imageIndex]);
+  loadSong(songs[songIndex], images[songIndex]);
 
   playSong();
 }
+
+// Play and pause events
+playBtn.addEventListener('click', () => {
+  const isPlaying = musicContainer.classList.contains('play');
+
+  isPlaying ? pauseSong() : playSong();
+});
+
+// Change song events
+prevBtn.addEventListener('click', playPrevSong);
+nextBtn.addEventListener('click', playNextSong);
+audio.addEventListener('ended', playNextSong);
+options.forEach(option =>
+  option.addEventListener('click', () => {
+    selectedOption = option;
+    loadSelectedValue();
+    const index = [...options].indexOf(option);
+    playSelectedSong(index);
+  })
+);
 
 function updateProgress(e) {
   const { duration, currentTime } = e.srcElement;
@@ -105,36 +132,6 @@ function setProgress(e) {
   audio.currentTime = (clickX / width) * duration;
 }
 
-// Event listeners
-playBtn.addEventListener('click', () => {
-  const isPlaying = musicContainer.classList.contains('play');
-
-  if (isPlaying) {
-    pauseSong();
-  } else {
-    playSong();
-  }
-});
-
-// Change song events
-prevBtn.addEventListener('click', prevSong);
-nextBtn.addEventListener('click', nextSong);
-audio.addEventListener('ended', nextSong);
-
 // Song progress events
 audio.addEventListener('timeupdate', updateProgress);
 progressContainer.addEventListener('click', setProgress);
-
-// Creating select options
-selectElements.forEach(selectElement => {
-  new Select(selectElement);
-});
-
-// This event listener doesn't hear the event on select options, and I don't know why... (((
-selectOptions.forEach(option =>
-  option.addEventListener('change', e => {
-    // option.addEventListener('click', e => {
-    selectedSong;
-    // console.log(e.target, 'Event happened');
-  })
-);
