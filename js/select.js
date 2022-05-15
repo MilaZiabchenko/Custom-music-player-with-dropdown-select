@@ -3,11 +3,10 @@ import { songs } from './constants.js';
 export default class Select {
   constructor(element) {
     this.element = element;
-    this.options = getFormattedOptions(element.querySelectorAll('option'));
     this.customDropdownContainer = document.createElement('div');
     this.customDropdownValue = document.createElement('span');
     this.customDropdownOptions = document.createElement('ul');
-
+    this.options = getFormattedOptions(element.querySelectorAll('option'));
     setupCustomElement(this);
     element.style.display = 'none';
     element.after(this.customDropdownContainer);
@@ -42,6 +41,7 @@ export default class Select {
     const newCustomElement = this.customDropdownOptions.querySelector(
       `[data-value='${newSelectedOption.value}']`
     );
+
     newCustomElement.classList.add('selected');
     newCustomElement.scrollIntoView({ block: 'nearest' });
   }
@@ -70,6 +70,7 @@ function setupCustomElement(select) {
 
   select.options.forEach(option => {
     const optionElement = document.createElement('li');
+
     optionElement.classList.add('custom-select-option');
     optionElement.classList.toggle('selected', option.selected);
     optionElement.textContent = songs[selectIndex++];
@@ -78,8 +79,10 @@ function setupCustomElement(select) {
       select.selectValue(option.value);
       select.customDropdownOptions.classList.remove('show');
     });
+
     select.customDropdownOptions.append(optionElement);
   });
+
   select.customDropdownContainer.append(select.customDropdownOptions);
 
   select.customDropdownValue.addEventListener('click', () => {
@@ -101,11 +104,13 @@ function setupCustomElement(select) {
 
       case 'ArrowUp':
         const prevOption = select.options[select.selectedOptionIndex - 1];
+
         prevOption && select.selectValue(prevOption.value);
         break;
 
       case 'ArrowDown':
         const nextOption = select.options[select.selectedOptionIndex + 1];
+
         nextOption && select.selectValue(nextOption.value);
         break;
 
@@ -121,9 +126,10 @@ function setupCustomElement(select) {
           searchTerm = '';
         }, 500);
 
-        const searchedOption = select.options.find(option => {
-          return option.label.toLowerCase().startsWith(searchTerm);
-        });
+        const searchedOption = select.options.find(option =>
+          option.label.toLowerCase().startsWith(searchTerm)
+        );
+
         searchedOption && select.selectValue(searchedOption.value);
     }
   });

@@ -13,9 +13,11 @@ const progressContainer = document.querySelector('.progress-container');
 
 // Create custom select options
 const selectElements = document.querySelectorAll('[data-select]');
+
 selectElements.forEach(selectElement => {
   new Select(selectElement);
 });
+
 const options = document.querySelectorAll('.custom-select-option');
 const selectedValue = document.querySelector('.custom-select-value');
 
@@ -109,11 +111,15 @@ playBtn.addEventListener('click', () => {
 prevBtn.addEventListener('click', playPrevSong);
 nextBtn.addEventListener('click', playNextSong);
 audio.addEventListener('ended', playNextSong);
+
 options.forEach(option =>
   option.addEventListener('click', () => {
     selectedOption = option;
+
     loadSelectedValue();
+
     const index = [...options].indexOf(option);
+
     playSelectedSong(index);
   })
 );
@@ -121,6 +127,7 @@ options.forEach(option =>
 function updateProgress(e) {
   const { duration, currentTime } = e.srcElement;
   const progressPercent = (currentTime / duration) * 100;
+
   progress.style.width = `${progressPercent}%`;
 }
 
